@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Donate Food</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-success">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="/">
+            🍱 Food Rescue Connect
+        </a>
+
+        <a href="/logout" class="btn btn-danger">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-7">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-success text-white">
+
+                    <h2 class="text-center">
+                        🍱 Donate Food
+                    </h2>
+
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Food Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="food_name"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Quantity
+                            </label>
+
+                            <input
+                                type="text"
+                                name="quantity"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Expiry Time
+                            </label>
+
+                            <input
+                                type="datetime-local"
+                                name="expiry_time"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Pickup Address
+                                <div class="mb-3">
+
+    <label class="form-label">
+        📷 Food Image
+    </label>
+
+    <input
+        type="file"
+        name="food_image"
+        class="form-control"
+        accept="image/*"
+        required>
+
+</div>
+                            </label>
+
+                            <textarea
+                                name="pickup_address"
+                                class="form-control"
+                                rows="3"
+                                required></textarea>
+
+                        </div>
+
+                        <div class="d-grid">
+
+                            <button class="btn btn-success btn-lg">
+                                🍱 Donate Food
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    <div class="text-center mt-4">
+
+                        <a href="/donor_dashboard" class="btn btn-secondary">
+                            ⬅ Back to Donor Dashboard
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer class="text-center mt-5">
+
+    <hr>
+
+    <p>
+        © 2026 Food Rescue Connect | Developed by Dinesh K P
+    </p>
+
+</footer>
+
+</body>
+
+</html>
