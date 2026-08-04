@@ -1,2 +1,23 @@
+# Python
 __pycache__/
 *.pyc
+
+# Local configuration
+config.py
+.env
+.env.local
+venv/
+
+# Uploads
+static/uploads/
+
+# PDF files
+*.pdf
+
+# VS Code
+.vscode/
+.idea/
+
+# Windows & macOS
+Thumbs.db
+.DS_Store
