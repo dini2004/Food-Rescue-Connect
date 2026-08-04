@@ -13,3 +13,6 @@ A web application that connects food donors, NGOs, and delivery partners to redu
 ## Team Members
 - Dinesh
 - Hemanth
+
+##contributors
+- Hemanth
