@@ -1,15 +1,18 @@
 __pycache__/
 *.pyc
+
 .env
-venv/
 .env.local
+venv/
+
+config.py
 
 static/uploads/
 
 *.pdf
 
-.idea/
 .vscode/
+.idea/
 
 Thumbs.db
 .DS_Store
