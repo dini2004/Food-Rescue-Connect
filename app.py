@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for,flash
+from flask import Flask, render_template, request, redirect, session, send_file
 from werkzeug.utils import secure_filename
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
@@ -284,19 +284,40 @@ def my_donations():
 
     donor_id = session["user_id"]
 
-    query = """
-    SELECT donation_id,
-           food_name,
-           quantity,
-           expiry_time,
-           pickup_address,
-           status,
-           food_image
-    FROM food_donations
-    WHERE donor_id = %s
-    """
+    status = request.args.get("status")
 
-    db.cursor.execute(query, (donor_id,))
+    if status:
+
+        query = """
+        SELECT donation_id,
+               food_name,
+               quantity,
+               expiry_time,
+               pickup_address,
+               status,
+               food_image
+        FROM food_donations
+        WHERE donor_id = %s
+        AND status = %s
+        """
+
+        db.cursor.execute(query, (donor_id, status))
+
+    else:
+
+        query = """
+        SELECT donation_id,
+               food_name,
+               quantity,
+               expiry_time,
+               pickup_address,
+               status,
+               food_image
+        FROM food_donations
+        WHERE donor_id = %s
+        """
+
+        db.cursor.execute(query, (donor_id,))
 
     donations = db.cursor.fetchall()
 
@@ -304,7 +325,6 @@ def my_donations():
         "my_donations.html",
         donations=donations
     )
-
 
 @app.route("/available_donations")
 def available_donations():
@@ -341,6 +361,37 @@ def accepted_donations():
         "accepted_donations.html",
         donations=donations
     )
+
+@app.route("/completed_donations")
+def completed_donations():
+
+    query = """
+    SELECT *
+    FROM food_donations
+    WHERE status='Completed'
+    """
+
+    db.cursor.execute(query)
+
+    donations = db.cursor.fetchall()
+
+    return render_template(
+        "completed_donations.html",
+        donations=donations
+    )
+@app.route("/accept_donation/<int:donation_id>")
+def accept_donation(donation_id):
+
+    query = """
+        UPDATE food_donations
+        SET status = 'Accepted'
+        WHERE donation_id = %s
+    """
+
+    db.cursor.execute(query, (donation_id,))
+    db.connection.commit()
+
+    return redirect("/available_donations")
 
 #donar dashboard
 @app.route("/donor_dashboard")
@@ -572,7 +623,7 @@ def complete_donation(donation_id):
 
     return redirect("/accepted_donations")
 
-from flask import send_file
+from flask import Flask, render_template, request, redirect, session, send_file
 
 @app.route("/download_report")
 def download_report():

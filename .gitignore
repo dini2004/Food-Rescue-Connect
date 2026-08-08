@@ -1,18 +1,14 @@
+config.py
+
 __pycache__/
 *.pyc
 
 .env
-.env.local
 venv/
+.env.local
 
-config.py
-
-static/uploads/
-
-*.pdf
-
-.vscode/
 .idea/
+.vscode/
 
 Thumbs.db
 .DS_Store
