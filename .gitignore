@@ -1,3 +1,4 @@
+ dinesh
 config.py
 
 __pycache__/
@@ -10,5 +11,28 @@ venv/
 .idea/
 .vscode/
 
+
+# Python
+__pycache__/
+*.pyc
+
+# Local configuration
+config.py
+.env
+.env.local
+venv/
+
+# Uploads
+static/uploads/
+
+# PDF files
+*.pdf
+
+# VS Code
+.vscode/
+.idea/
+
+# Windows & macOS
+ main
 Thumbs.db
 .DS_Store
