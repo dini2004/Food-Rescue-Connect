@@ -1,12 +1,11 @@
+config.py
+
 __pycache__/
 *.pyc
 .env
 venv/
 .env.local
 
-static/uploads/
-
-*.pdf
 
 .idea/
 .vscode/
