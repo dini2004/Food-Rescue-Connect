@@ -50,7 +50,6 @@ def register():
 
 
 # ---------------- LOGIN ---------------- #
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -58,9 +57,12 @@ def login():
 
         email = request.form["email"]
         password = request.form["password"]
+        selected_role = request.form["role"]
+
 
         query = """
-        SELECT * FROM users
+        SELECT *
+        FROM users
         WHERE email=%s AND password=%s
         """
 
@@ -70,28 +72,69 @@ def login():
 
         user = db.cursor.fetchone()
 
+
         if user:
+
+            database_role = user[5]
+
+
+            # Check selected role with database role
+
+            if selected_role != database_role:
+
+                return """
+                <h3>❌ Incorrect Role</h3>
+                <p>This account is not registered as the selected role.</p>
+                <a href="/login">⬅ Back to Login</a>
+                """
+
+
             session["user_id"] = user[0]
-            session["role"] = user[5]
-            session["full_name"]=user[1]
+
+            session["role"] = database_role
+
+            session["full_name"] = user[1]
 
 
-            role = user[5]
+            # Redirect according to role
 
-            if role == "Donor":
-                return render_template("donor_dashboard.html")
+            if database_role == "Donor":
 
-            elif role == "NGO":
-                return render_template("ngo_dashboard.html")
+                return render_template(
+                    "donor_dashboard.html"
+                )
 
-            elif role == "Admin":
-                return render_template("admin_dashboard.html")
+
+            elif database_role == "NGO":
+
+                return render_template(
+                    "ngo_dashboard.html"
+                )
+
+
+            elif database_role == "Admin":
+
+                return render_template(
+                    "admin_dashboard.html"
+                )
+
+
+            elif database_role == "Delivery Partner":
+
+                return render_template(
+                    "delivery_dashboard.html"
+                )
+
 
         else:
-            return "Invalid Email or Password"
+
+            return """
+            <h3>❌ Invalid Email or Password</h3>
+            <a href="/login">⬅ Try Again</a>
+            """
+
 
     return render_template("login.html")
-
 
 # ---------------- DONATE FOOD ---------------- #
 
@@ -777,6 +820,83 @@ def download_certificate():
     return send_file(
         filename,
         as_attachment=True
+    )
+
+@app.route("/available_deliveries")
+def available_deliveries():
+
+    query = """
+    SELECT donation_id,
+           food_name,
+           quantity,
+           pickup_address,
+           status
+    FROM food_donations
+    WHERE status = 'Accepted'
+    AND delivery_partner_id IS NULL
+    """
+
+    db.cursor.execute(query)
+
+    donations = db.cursor.fetchall()
+
+    return render_template(
+        "available_deliveries.html",
+        donations=donations
+    )
+@app.route("/accept_delivery/<int:donation_id>")
+def accept_delivery(donation_id):
+
+    delivery_partner_id = session["user_id"]
+
+    query = """
+    UPDATE food_donations
+    SET delivery_partner_id = %s,
+        delivery_status = 'Accepted'
+    WHERE donation_id = %s
+    """
+
+    values = (delivery_partner_id, donation_id)
+
+    db.cursor.execute(query, values)
+    db.connection.commit()
+
+    return redirect("/available_deliveries")
+
+@app.route("/my_deliveries")
+def my_deliveries():
+
+    delivery_partner_id = session["user_id"]
+
+    print("Delivery Partner ID:", delivery_partner_id)
+
+    query = """
+    SELECT donation_id,
+           food_name,
+           quantity,
+           pickup_address,
+           status,
+           delivery_status
+    FROM food_donations
+    WHERE delivery_partner_id = %s
+    """
+
+    db.cursor.execute(query, (delivery_partner_id,))
+
+    deliveries = db.cursor.fetchall()
+
+    print("My Deliveries:", deliveries)
+
+    return render_template(
+        "my_deliveries.html",
+        deliveries=deliveries
+    )
+
+@app.route("/delivery_dashboard")
+def delivery_dashboard():
+
+    return render_template(
+        "delivery_dashboard.html"
     )
 # ---------------- RUN APPLICATION ---------------- #
 
