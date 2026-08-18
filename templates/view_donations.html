@@ -2,20 +2,20 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>View Donations</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<body>
 
-<nav class="navbar navbar-dark bg-success">
-
+<!-- Navigation -->
+<nav class="navbar navbar-dark bg-dark">
     <div class="container">
 
         <a class="navbar-brand fw-bold" href="/">
@@ -27,167 +27,242 @@
         </a>
 
     </div>
-
 </nav>
 
-<div class="container mt-5">
+
+<!-- Main Container -->
+<div class="container mt-4">
 
     <div class="card shadow">
 
+        <!-- Header -->
         <div class="card-header bg-success text-white">
 
-            
-            <h2 class="mb-3">
-    🍱 Food Donations
-</h2>
-
-<form action="/view_donations" method="GET" class="mb-4">
-
-    <div class="input-group">
-
-        <input
-            type="text"
-            class="form-control"
-            name="search"
-            placeholder="Search by Food, Donor or Status">
-
-        <button class="btn btn-success" type="submit">
-            🔍 Search
-        </button>
-        <div class="mb-3">
-
-    <a href="/view_donations" class="btn btn-dark">
-        All
-    </a>
-
-    <a href="/view_donations?status=Available" class="btn btn-warning">
-        Available
-    </a>
-
-    <a href="/view_donations?status=Accepted" class="btn btn-success">
-        Accepted
-    </a>
-
-    <a href="/view_donations?status=Completed" class="btn btn-primary">
-        Completed
-    </a>
-
-</div>
-
-    </div>
-
-</form>
+            <h2 class="mb-0">
+                🍱 Food Donations
+            </h2>
 
         </div>
 
+
         <div class="card-body">
-            <form method="GET" action="/view_donations" class="mb-3">
 
-    <div class="input-group">
+            <!-- Search -->
+            <form method="GET"
+                  action="/view_donations"
+                  class="mb-3">
 
-        <input
-            type="text"
-            name="search"
-            class="form-control"
-            placeholder="Search by Food Name or Status">
+                <div class="input-group">
 
-        <button class="btn btn-primary" type="submit">
-            🔍 Search
-        </button>
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search by Food, Donor or Status"
+                        value="{{ request.args.get('search', '') }}">
 
-    </div>
+                    <button
+                        class="btn btn-primary"
+                        type="submit">
+                        🔍 Search
+                    </button>
 
-</form>
+                </div>
 
-            <table class="table table-bordered table-hover table-striped">
+            </form>
 
-                <thead class="table-dark">
 
-                    <tr>
+            <!-- Status Filters -->
+            <div class="mb-3">
 
-                        <th>ID</th>
-                        <th>Food Name</th>
-                        <th>Quantity</th>
-                        <th>Expiry Time</th>
-                        <th>Pickup Address</th>
-                        <th>Status</th>
-                        <th>Image</th>
-                        <th>Action</th>
+                <a href="/view_donations"
+                   class="btn btn-dark">
+                    All
+                </a>
 
-                    </tr>
+                <a href="/view_donations?status=Available"
+                   class="btn btn-warning">
+                    Available
+                </a>
 
-                </thead>
+                <a href="/view_donations?status=Accepted"
+                   class="btn btn-success">
+                    Accepted
+                </a>
 
-                <tbody>
+                <a href="/view_donations?status=Completed"
+                   class="btn btn-primary">
+                    Completed
+                </a>
 
-                    {% for donation in donations %}
+            </div>
 
-                    <tr>
 
-                        <td>{{ donation[0] }}</td>
-                        <td>{{ donation[2] }}</td>
-                        <td>{{ donation[3] }}</td>
-                        <td>{{ donation[4] }}</td>
-                        <td>{{ donation[5] }}</td>
-                        <td>
-                            {% if donation[6] == "Available" %}
-                                <span class="badge bg-warning text-dark">
-                                    {{ donation[6] }}
-                                </span>
+            <!-- Donations Table -->
+            <div class="table-responsive">
 
-                            {% elif donation[6] == "Accepted" %}
-                                <span class="badge bg-success">
-                                    {{ donation[6] }}
-                                </span>
+                <table class="table table-bordered table-hover table-striped">
 
-                            {% else %}
-                                <span class="badge bg-secondary">
-                                    {{ donation[6] }}
-                                </span>
-                            {% endif %}
-                        </td>
+                    <thead class="table-dark">
 
-                        <td>
+                        <tr>
 
-    {% if donation[8] %}
+                            <th>ID</th>
+                            <th>Food Name</th>
+                            <th>Quantity</th>
+                            <th>Expiry Time</th>
+                            <th>Pickup Address</th>
+                            <th>Status</th>
+                            <th>Image</th>
+                            <th>Action</th>
 
-        <img
-            src="{{ url_for('static', filename='uploads/' + donation[8]) }}"
-            width="100"
-            height="80"
-            class="rounded border">
+                        </tr>
 
-    {% else %}
+                    </thead>
 
-        No Image
 
-    {% endif %}
+                    <tbody>
 
-</td>
-                        <td>
+                        {% for donation in donations %}
 
-                              <a href="/delete_donation/{{ donation[0] }}"
-                              class="btn btn-danger btn-sm"
-                               onclick="return confirm('Are you sure you want to delete this donation?')">
+                        <tr>
 
-                                🗑 Delete
+                            <!-- ID -->
+                            <td>
+                                {{ donation[0] }}
+                            </td>
 
-                              </a>
 
-                        </td>
+                            <!-- Food Name -->
+                            <td>
+                                {{ donation[2] }}
+                            </td>
 
-                    </tr>
 
-                    {% endfor %}
+                            <!-- Quantity -->
+                            <td>
+                                {{ donation[3] }}
+                            </td>
 
-                </tbody>
 
-            </table>
+                            <!-- Expiry -->
+                            <td>
+                                {{ donation[4] }}
+                            </td>
 
+
+                            <!-- Pickup Address -->
+                            <td>
+                                {{ donation[5] }}
+                            </td>
+
+
+                            <!-- Status -->
+                            <td>
+
+                                {% if donation[6] == "Available" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        {{ donation[6] }}
+                                    </span>
+
+                                {% elif donation[6] == "Accepted" %}
+
+                                    <span class="badge bg-success">
+                                        {{ donation[6] }}
+                                    </span>
+
+                                {% elif donation[6] == "Completed" %}
+
+                                    <span class="badge bg-primary">
+                                        {{ donation[6] }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ donation[6] }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Image -->
+                            <td>
+
+                                {% if donation[8] %}
+
+                                    <img
+                                        src="{{ url_for(
+                                            'static',
+                                            filename='uploads/' + donation[8]
+                                        ) }}"
+                                        width="100"
+                                        height="80"
+                                        class="rounded border">
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        No Image
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Action -->
+                            <td>
+
+                                <a
+                                    href="/delete_donation/{{ donation[0] }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm(
+                                        'Are you sure you want to delete this donation?'
+                                    )">
+
+                                    🗑 Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+
+                            <td colspan="8"
+                                class="text-center text-muted">
+
+                                No donations found.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- Back Button -->
             <div class="text-center mt-4">
 
-                <a href="/admin_dashboard" class="btn btn-secondary">
+                <a
+                    href="/admin_dashboard"
+                    class="btn btn-secondary">
+
                     ⬅ Back to Admin Dashboard
+
                 </a>
 
             </div>
@@ -198,14 +273,18 @@
 
 </div>
 
-<footer class="text-center mt-5">
+
+<!-- Footer -->
+<footer class="text-center mt-4">
 
     <hr>
 
-    <p>© 2026 Food Rescue Connect | Admin Panel</p>
+    <p>
+        © 2026 Food Rescue Connect | Admin Panel
+    </p>
 
 </footer>
 
-</body>
 
+</body>
 </html>
